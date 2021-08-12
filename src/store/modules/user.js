@@ -1,9 +1,10 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { adminLogin, adminLogout, getAdminInfo } from '@/api/user'
+import { getGuid, setGuid, removeGuid, getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
+    guid: getGuid(),
     token: getToken(),
     name: '',
     avatar: ''
@@ -15,6 +16,9 @@ const state = getDefaultState()
 const mutations = {
   RESET_STATE: (state) => {
     Object.assign(state, getDefaultState())
+  },
+  SET_GUID: (state, guid) => {
+    state.guid = guid
   },
   SET_TOKEN: (state, token) => {
     state.token = token
@@ -28,13 +32,20 @@ const mutations = {
 }
 
 const actions = {
-  // user login
+  // admin login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password, verifyCode, number } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      adminLogin({
+        username: username.trim(),
+        password,
+        captcha: verifyCode,
+        number
+      }).then(response => {
         const { data } = response
+        commit('SET_GUID', data.guid)
         commit('SET_TOKEN', data.token)
+        setGuid(data.guid)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -46,16 +57,16 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getAdminInfo({}).then(response => {
         const { data } = response
 
         if (!data) {
-          return reject('Verification failed, please Login again.')
+          return reject('验证失败，请重新登录。')
         }
 
-        const { name, avatar } = data
+        const { avatar, nick_name } = data
 
-        commit('SET_NAME', name)
+        commit('SET_NAME', nick_name)
         commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
@@ -67,7 +78,8 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      adminLogout(state.token).then(() => {
+        removeGuid()
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
@@ -81,6 +93,7 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
+      removeGuid()
       removeToken() // must remove  token  first
       commit('RESET_STATE')
       resolve()

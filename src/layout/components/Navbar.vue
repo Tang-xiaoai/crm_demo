@@ -7,7 +7,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img v-if="avatar" :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img v-if="avatar !== '---'" :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <img v-else src="@/assets/imgView.gif" alt="" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>

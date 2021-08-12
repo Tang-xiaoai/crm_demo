@@ -1,12 +1,9 @@
 /**
- * Created by PanJiaChen on 16/11/18.
- */
-
-/**
  * Parse the time to string
  * @param {(Object|string|number)} time
  * @param {string} cFormat
  * @returns {string | null}
+ * @author PanJiaChen
  */
 export function parseTime(time, cFormat) {
   if (arguments.length === 0 || !time) {
@@ -55,6 +52,7 @@ export function parseTime(time, cFormat) {
  * @param {number} time
  * @param {string} option
  * @returns {string}
+ * @author PanJiaChen
  */
 export function formatTime(time, option) {
   if (('' + time).length === 10) {
@@ -97,6 +95,7 @@ export function formatTime(time, option) {
 /**
  * @param {string} url
  * @returns {Object}
+ * @author PanJiaChen
  */
 export function param2Obj(url) {
   const search = decodeURIComponent(url.split('?')[1]).replace(/\+/g, ' ')
@@ -114,4 +113,15 @@ export function param2Obj(url) {
     }
   })
   return obj
+}
+
+/**
+ * 获取min~max之间的任意整数值
+ * @param min
+ * @param max
+ * @returns {number}
+ * @author tah
+ */
+export function randomNumber(min, max) {
+  return parseInt(Math.random() * (max - min + 1) + min, 10)
 }

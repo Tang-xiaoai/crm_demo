@@ -1,11 +1,11 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
       <div class="title-container">
         <h3 class="title">CRM系统登录</h3>
       </div>
 
+      <!-- 输入用户名 -->
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -13,7 +13,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="请输入用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -21,6 +21,7 @@
         />
       </el-form-item>
 
+      <!-- 密码输入框 -->
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
@@ -30,15 +31,33 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
+      </el-form-item>
+
+      <!-- 输入验证码 verifycode-->
+      <el-form-item prop="verifyCode">
+        <div class="verifycode">
+          <span class="svg-container">
+            <svg-icon icon-class="lock" />
+          </span>
+          <el-input
+            ref="verifyCode"
+            v-model="loginForm.verifyCode"
+            placeholder="请输入验证码"
+            name="verifyCode"
+            tabindex="1"
+            auto-complete="off"
+            @keyup.enter.native="handleLogin"
+          />
+          <img :src="codeUrl" alt="验证码图" class="code" @click="changeCode()">
+        </div>
       </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
@@ -46,37 +65,35 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { randomNumber } from '@/utils/index'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
+    // 用户名，密码暂未校验 validate.js中
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: 'viktorchen',
+        password: 'czw741852963',
+        verifyCode: '',
+        number: randomNumber(100000, 999999)
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
+        verifyCode: [
+          { required: true, message: '验证码不能为空', trigger: ['blur', 'change'] },
+          { pattern: /^\w{5}$/, message: '请输入合法5位验证码', trigger: ['blur', 'change'] }
+        ]
       },
       loading: false,
       passwordType: 'password',
       redirect: undefined
+    }
+  },
+  computed: {
+    codeUrl() {
+      return process.env.VUE_APP_BASE_API + '/api/captcha/' + this.loginForm.number
     }
   },
   watch: {
@@ -88,6 +105,7 @@ export default {
     }
   },
   methods: {
+    // 显隐密码
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -98,6 +116,11 @@ export default {
         this.$refs.password.focus()
       })
     },
+    // 点击验证码图片，切换验证码
+    changeCode() {
+      this.loginForm.number = randomNumber(100000, 999999)
+    },
+    // click事件触发登录事件
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -225,6 +248,12 @@ $light_gray:#eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+  .verifycode {
+    display: flex;
+    .code {
+      cursor: pointer;
+    }
   }
 }
 </style>

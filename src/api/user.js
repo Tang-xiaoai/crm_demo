@@ -1,24 +1,38 @@
 import request from '@/utils/request'
+import { cryptSign } from '@/utils/cryptSign'
 
-export function login(data) {
+/**
+ * 管理员登录
+ * @param data
+ * @returns {AxiosPromise}
+ * @author tah
+ */
+export function adminLogin(data) {
+  const url = '/api/admin/login'
+  data = cryptSign(url, data)
   return request({
-    url: '/vue-admin-template/user/login',
+    url,
     method: 'post',
     data
   })
 }
 
-export function getInfo(token) {
+export function getAdminInfo(data) {
+  const url = '/api/admin/info'
+  data = cryptSign(url, data)
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url,
+    method: 'post',
+    data
   })
 }
 
-export function logout() {
+export function adminLogout(data) {
+  const url = '/api/admin/logout'
+  data = cryptSign(url, data)
   return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
+    url,
+    method: 'post',
+    data
   })
 }

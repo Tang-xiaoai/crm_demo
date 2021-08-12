@@ -5,6 +5,7 @@
 /**
  * @param {string} path
  * @returns {Boolean}
+ * @author PanJiaChen
  */
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
