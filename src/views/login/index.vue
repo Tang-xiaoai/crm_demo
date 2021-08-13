@@ -73,8 +73,8 @@ export default {
     // 用户名，密码暂未校验 validate.js中
     return {
       loginForm: {
-        username: 'viktorchen',
-        password: 'czw741852963',
+        username: 'tangaihui',
+        password: 'tangaihui',
         verifyCode: '',
         number: randomNumber(100000, 999999)
       },

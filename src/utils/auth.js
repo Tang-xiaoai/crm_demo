@@ -10,17 +10,17 @@ export function getToken() {
 export function setToken(token) {
   return Cookies.set(TokenKey, token)
 }
+export function removeToken() {
+  return Cookies.remove(TokenKey)
+}
 export function getGuid() {
-  return Cookies.get(TokenKey)
+  return Cookies.get(GuidKey)
 }
 
 export function setGuid(guid) {
   return Cookies.set(GuidKey, guid)
 }
 
-export function removeToken() {
-  return Cookies.remove(TokenKey)
-}
 export function removeGuid() {
   return Cookies.remove(GuidKey)
 }

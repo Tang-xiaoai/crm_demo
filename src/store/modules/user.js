@@ -37,7 +37,7 @@ const actions = {
     const { username, password, verifyCode, number } = userInfo
     return new Promise((resolve, reject) => {
       adminLogin({
-        username: username.trim(),
+        user_name: username.trim(),
         password,
         captcha: verifyCode,
         number
@@ -66,8 +66,8 @@ const actions = {
 
         const { avatar, nick_name } = data
 
-        commit('SET_NAME', nick_name)
         commit('SET_AVATAR', avatar)
+        commit('SET_NAME', nick_name)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -75,10 +75,10 @@ const actions = {
     })
   },
 
-  // user logout
+  // user logout 接口未写未完成
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      adminLogout(state.token).then(() => {
+      adminLogout({}).then(() => {
         removeGuid()
         removeToken() // must remove  token  first
         resetRouter()

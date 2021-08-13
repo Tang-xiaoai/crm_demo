@@ -47,10 +47,6 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
-      if (res.code === 500) {
-        res.msg = '服务器出了些小问题，工程师正在赶来的路上～～'
-      }
-
       Message({
         message: res.msg || 'Error',
         type: 'error',
@@ -60,7 +56,7 @@ service.interceptors.response.use(
       // tah 签名错误，token过期，重置token，重新登录
       if (res.code === 'SN005' || res.code === 'SN009') {
         // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+        MessageBox.confirm('您已注销，可以取消以停留在此页面，或重新登录。', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',
           type: 'warning'
