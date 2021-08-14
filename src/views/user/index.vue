@@ -81,7 +81,8 @@
       </el-table-column>
       <el-table-column align="left" label="头像" min-width="104px">
         <template slot-scope="scope">
-          <img :src="scope.row.avatar+'?imageView2/1/w/80/h/80'" class="avatar-img" alt="">
+          <img v-if="scope.row.avatar !== '---'" :src="scope.row.avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" alt="">
+          <img v-else src="@/assets/imgView.gif?imageView2/1/w/80/h/80" alt="" class="user-avatar">
         </template>
       </el-table-column>
       <el-table-column align="left" label="昵称" min-width="130px">
@@ -387,6 +388,9 @@ export default {
             })
             this.getList()
           })
+        } else {
+          console.log('请检查提交信息!!')
+          return false
         }
       })
     },
@@ -417,6 +421,9 @@ export default {
             })
             this.getList()
           })
+        } else {
+          console.log('请检查提交信息!!')
+          return false
         }
       })
     },
@@ -432,10 +439,7 @@ export default {
     // 更新管理员信息
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
-        console.log('user/index-temp', this.temp)
-        console.log('user/index-valid:', this.$refs['dataForm'])
         if (valid) {
-          console.log('user/index-')
           const tempData = {
             admin_guid: this.temp.guid,
             nick_name: this.temp.nick_name,
@@ -451,6 +455,9 @@ export default {
             })
           })
           this.getList()
+        } else {
+          console.log('请检查提交信息!!')
+          return false
         }
       })
     },
@@ -513,10 +520,10 @@ export default {
     margin-top: 6px;
     margin-right: 8px;
   }
-  .avatar-img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+  .user-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
   }
   .upload-img {
     width: 96px;

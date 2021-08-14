@@ -132,7 +132,7 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
+          console.log('请检查提交信息!!')
           return false
         }
       })
